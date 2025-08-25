@@ -440,11 +440,30 @@ app.post('/api/founders-application', async (req, res) => {
       console.log(`📁 File: New Founders Circle application: ${application.email} (${application.role})`);
     }
     
-    // Send email notifications
-    await sendFoundersNotification(application);
-    await sendUserConfirmation(application);
+    // Send email notifications (don't fail if emails fail)
+    let emailErrors = [];
     
-    return res.json({ ok: true, applicationId: result.id });
+    try {
+      await sendFoundersNotification(application);
+    } catch (error) {
+      console.error('Admin email failed:', error);
+      emailErrors.push('admin_email_failed');
+    }
+    
+    try {
+      await sendUserConfirmation(application);
+    } catch (error) {
+      console.error('User email failed:', error);
+      emailErrors.push('user_email_failed');
+    }
+    
+    // Always return success if application was saved
+    return res.json({ 
+      ok: true, 
+      applicationId: result.id,
+      emailStatus: emailErrors.length > 0 ? 'partial' : 'success',
+      emailErrors: emailErrors
+    });
   } catch (err) {
     console.error('Founders application error', err);
     return res.status(500).json({ ok: false, error: 'server_error' });
