@@ -9,6 +9,20 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5173;
 
+// CORS Configuration for production
+app.use(cors({
+  origin: [
+    'https://assero-frontend.netlify.app',
+    'https://assero.io',
+    'https://www.assero.io',
+    'http://localhost:3000',
+    'http://localhost:5173'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 // Supabase Configuration
 let supabase;
 let supabaseAdmin;
