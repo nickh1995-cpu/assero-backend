@@ -124,6 +124,53 @@ const sendFoundersNotification = async (application) => {
   }
 };
 
+// Send confirmation email to user
+const sendUserConfirmation = async (application) => {
+  if (!emailTransporter) {
+    console.log('📧 User confirmation skipped (not configured)');
+    return;
+  }
+
+  try {
+    const template = emailTemplates.userConfirmation(application);
+    const mailOptions = {
+      from: `"Assero.io" <${process.env.EMAIL_USER}>`,
+      to: application.email,
+      subject: template.subject,
+      html: template.html
+    };
+
+    await emailTransporter.sendMail(mailOptions);
+    console.log(`📧 User confirmation sent to ${application.email}`);
+    
+    // Log the email
+    await logEmail(
+      'user_confirmation',
+      application.email,
+      `${application.first_name} ${application.last_name}`,
+      template.subject,
+      'sent',
+      application.id,
+      null,
+      { user_confirmation: true }
+    );
+  } catch (error) {
+    console.error('📧 User confirmation failed:', error);
+    
+    // Log the failed email
+    await logEmail(
+      'user_confirmation',
+      application.email,
+      `${application.first_name} ${application.last_name}`,
+      'Bewerbung erfolgreich eingereicht - Assero Founders Circle',
+      'failed',
+      application.id,
+      error.message,
+      { user_confirmation: true }
+    );
+  }
+};
+
 // Send status update email to applicant
 const sendStatusUpdateEmail = async (application, newStatus) => {
   if (!emailTransporter) {
@@ -393,8 +440,9 @@ app.post('/api/founders-application', async (req, res) => {
       console.log(`📁 File: New Founders Circle application: ${application.email} (${application.role})`);
     }
     
-    // Send email notification
+    // Send email notifications
     await sendFoundersNotification(application);
+    await sendUserConfirmation(application);
     
     return res.json({ ok: true, applicationId: result.id });
   } catch (err) {

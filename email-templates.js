@@ -3,6 +3,72 @@
 // =====================================================
 
 const emailTemplates = {
+  // Template for user confirmation
+  userConfirmation: (application) => {
+    const timestamp = new Date().toLocaleString('de-DE');
+    return {
+      subject: '✅ Bewerbung erfolgreich eingereicht - Assero Founders Circle',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #c7a770, #2c3e50); color: white; padding: 30px; text-align: center; border-radius: 12px 12px 0 0;">
+            <h1 style="margin: 0; font-size: 28px;">✅ Bewerbung eingegangen!</h1>
+            <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Ihre Founders Circle Bewerbung wurde erfolgreich übermittelt</p>
+          </div>
+          
+          <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 12px 12px; border: 1px solid #e9ecef;">
+            <h2 style="color: #2c3e50; margin-top: 0;">Vielen Dank, ${application.first_name}!</h2>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+              <p style="margin: 0; color: #155724; font-weight: 600; font-size: 16px;">
+                ✅ Ihre Bewerbung für den Assero Founders Circle wurde erfolgreich eingereicht!
+              </p>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="color: #2c3e50; margin-top: 0;">📋 Ihre Bewerbungsdetails:</h3>
+              <ul style="color: #555; line-height: 1.8;">
+                <li><strong>Name:</strong> ${application.first_name} ${application.last_name}</li>
+                <li><strong>Email:</strong> ${application.email}</li>
+                <li><strong>Unternehmen:</strong> ${application.company || 'Nicht angegeben'}</li>
+                <li><strong>Position:</strong> ${application.role}</li>
+              </ul>
+            </div>
+            
+            <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #c3e6c3;">
+              <h3 style="color: #2d5a2d; margin-top: 0;">⏰ Nächste Schritte:</h3>
+              <ul style="color: #2d5a2d; line-height: 1.8;">
+                <li><strong>Prüfung:</strong> Unser Team prüft Ihre Bewerbung sorgfältig</li>
+                <li><strong>Entscheidung:</strong> Sie erhalten innerhalb von 24 Stunden eine Rückmeldung</li>
+                <li><strong>Persönliches Gespräch:</strong> Bei positiver Entscheidung vereinbaren wir ein Gespräch</li>
+                <li><strong>Onboarding:</strong> Einführung in die exklusive Founders Circle Community</li>
+              </ul>
+            </div>
+            
+            <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #ffeaa7;">
+              <h3 style="color: #856404; margin-top: 0;">💡 Während Sie warten:</h3>
+              <p style="color: #856404; line-height: 1.6;">
+                Besuchen Sie <a href="https://assero.io" style="color: #c7a770; font-weight: 600;">assero.io</a> 
+                und informieren Sie sich über unsere Plattform und die verfügbaren Asset-Kategorien.
+              </p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+              <a href="mailto:assero@assero.io" 
+                 style="background: #c7a770; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">
+                 📧 Fragen? Kontaktieren Sie uns
+              </a>
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin-top: 20px; color: #6c757d; font-size: 12px;">
+            <p>Assero.io - Die Plattform für exklusive Asset-Investments</p>
+            <p>Zeitstempel: ${timestamp}</p>
+          </div>
+        </div>
+      `
+    };
+  },
+
   // Template for approved applications
   approved: (application) => {
     const timestamp = new Date().toLocaleString('de-DE');
